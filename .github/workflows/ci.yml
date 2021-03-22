@@ -1,0 +1,86 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        mpi:
+          - mpich
+          - openmpi
+          - msmpi
+        os:
+          - ubuntu-20.04
+          - ubuntu-18.04
+          - macos-10.15
+          - windows-2019
+        exclude:
+          - os: ubuntu-20.04
+            mpi: msmpi
+          - os: ubuntu-18.04
+            mpi: msmpi
+          - os: macos-10.15
+            mpi: msmpi
+          - os: windows-2019
+            mpi: mpich
+          - os: windows-2019
+            mpi: openmpi
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup MPI
+      uses: ./
+      with:
+        mpi: ${{ matrix.mpi }}
+
+    - name: Show MPI info
+      run:  mpichversion
+      if:   ${{ matrix.mpi == 'mpich' }}
+
+    - name: Show MPI info
+      run:  ompi_info
+      if:   ${{ matrix.mpi == 'openmpi' }}
+
+    - name: Show MPI info
+      run: |
+        Write-Host MSMPI_BIN=$Env:MSMPI_BIN
+        Write-Host MSMPI_INC=$Env:MSMPI_INC
+        Write-Host MSMPI_LIB32=$Env:MSMPI_LIB32
+        Write-Host MSMPI_LIB64=$Env:MSMPI_LIB64
+      if:   ${{ matrix.mpi == 'msmpi' }}
+
+    - name: Show MPI compilers
+      run: |
+        command -v mpicc
+        mpicc -show
+        command -v mpicxx
+        mpicxx -show
+        command -v mpifort
+        mpifort -show
+      if: ${{ runner.os != 'Windows' }}
+
+    - name: Help MPI executor
+      run: |
+        command -v mpiexec
+        mpiexec --help
+      if: ${{ runner.os != 'Windows' }}
+
+    - name: Help MPI executor
+      run: |
+        mpiexec /help2
+        mpiexec /help3
+      if: ${{ runner.os == 'Windows' }}
