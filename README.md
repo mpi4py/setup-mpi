@@ -28,7 +28,7 @@ jobs:
     name: ${{ matrix.mpi }} example
     steps:
       - name: Checkout
-      - uses: actions/checkout@v2
+        uses: actions/checkout@v2
       - name: Setup MPI
         uses: mpi4py/setup-mpi@v1
         with:
