@@ -8,6 +8,7 @@ case $(uname) in
     Linux)
         MPI="${MPI:-mpich}"
         echo "Installing $MPI with apt"
+        sudo apt update
         case $MPI in
             mpich)
                 sudo apt install -y -q mpich libmpich-dev
