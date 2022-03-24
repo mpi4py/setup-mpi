@@ -15,5 +15,7 @@ runs:
   using: 'composite'
   steps:
     - id: setup-mpi
-      run: ${GITHUB_ACTION_PATH}/setup-mpi.sh ${{ inputs.mpi }}
+      run: ${GITHUB_ACTION_PATH}/setup-mpi.sh "$MPI"
       shell: bash
+      env:
+        MPI: ${{ inputs.mpi }}
