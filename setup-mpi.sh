@@ -66,6 +66,19 @@ esac
 
 echo "::set-output name=mpi::${MPI}"
 
+case $MPI in
+    mpich)
+        echo "::group::Run mpichversion"
+        mpichversion
+        echo "::endgroup::"
+        ;;
+    openmpi)
+        echo "::group::Run ompi_info --all"
+        ompi_info --all
+        echo "::endgroup::"
+        ;;
+esac
+
 if [ $MPI == openmpi ]; then
     openmpi_mca_params=$HOME/.openmpi/mca-params.conf
     mkdir -p $(dirname $openmpi_mca_params)
@@ -79,4 +92,7 @@ if [ $MPI == openmpi ]; then
         # open-mpi/ompi#5798
         echo btl_vader_backing_directory=/tmp >> $openmpi_mca_params
     fi
+    echo "::group::Configure ${openmpi_mca_params}"
+    cat $openmpi_mca_params
+    echo "::endgroup::"
 fi
