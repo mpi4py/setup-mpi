@@ -10,7 +10,7 @@ Basic:
 
 ```yaml
 steps:
-  - uses: actions/checkout@v2
+  - uses: actions/checkout@v3
   - uses: mpi4py/setup-mpi@v1
   - run: mpicc helloworld.c -o helloworld
   - run: mpiexec -n 2 ./helloworld
@@ -28,7 +28,7 @@ jobs:
     name: ${{ matrix.mpi }} example
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Setup MPI
         uses: mpi4py/setup-mpi@v1
         with:
