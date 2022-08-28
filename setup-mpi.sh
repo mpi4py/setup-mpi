@@ -7,7 +7,7 @@ case $(uname) in
 
     Linux)
         MPI="${MPI:-mpich}"
-        echo "Installing $MPI with apt"
+        echo "::group::Installing $MPI with apt"
         sudo apt update
         case $MPI in
             mpich)
@@ -21,11 +21,12 @@ case $(uname) in
                 exit 1
                 ;;
         esac
+        echo "::endgroup::"
         ;;
 
     Darwin)
         MPI="${MPI:-mpich}"
-        echo "Installing $MPI with brew"
+        echo "::group::Installing $MPI with brew"
         case $MPI in
             mpich)
                 brew install mpich
@@ -38,11 +39,12 @@ case $(uname) in
                 exit 1
                 ;;
         esac
+        echo "::endgroup::"
         ;;
 
     Windows* | MINGW* | MSYS*)
         MPI="${MPI:-msmpi}"
-        echo "Installing $MPI"
+        echo "::group::Installing $MPI"
         case $MPI in
             msmpi)
                 sdir=$(dirname "${BASH_SOURCE[0]}")
@@ -53,6 +55,7 @@ case $(uname) in
                 exit 1
                 ;;
         esac
+        echo "::endgroup::"
         ;;
 
     *)
