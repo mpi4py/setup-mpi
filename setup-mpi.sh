@@ -64,7 +64,7 @@ case $(uname) in
         ;;
 esac
 
-echo "::set-output name=mpi::${MPI}"
+echo "mpi=${MPI}" >> $GITHUB_OUTPUT
 
 case $MPI in
     mpich)
