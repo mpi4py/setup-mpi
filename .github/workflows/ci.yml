@@ -23,10 +23,8 @@ jobs:
         os:
           - ubuntu-22.04
           - ubuntu-20.04
-          - ubuntu-18.04
           - macos-12
           - macos-11
-          - macos-10.15
           - windows-2022
           - windows-2019
         exclude:
@@ -34,13 +32,9 @@ jobs:
             mpi: msmpi
           - os: ubuntu-20.04
             mpi: msmpi
-          - os: ubuntu-18.04
-            mpi: msmpi
           - os: macos-12
             mpi: msmpi
           - os: macos-11
-            mpi: msmpi
-          - os: macos-10.15
             mpi: msmpi
           - os: windows-2022
             mpi: mpich
