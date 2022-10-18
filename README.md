@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        mpi: [ 'mpich', 'openmpi' ]
+        mpi: [ 'mpich', 'openmpi', 'intelmpi']
     name: ${{ matrix.mpi }} example
     steps:
       - name: Checkout
@@ -39,6 +39,14 @@ jobs:
 
 # Available MPI implementations
 
-* Linux: [MPICH](https://www.mpich.org/) and [Open MPI](https://www.open-mpi.org/) (`apt` install).
-* macOS: [MPICH](https://www.mpich.org/) and [Open MPI](https://www.open-mpi.org/) (`brew` install).
-* Windows: [Microsoft MPI](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
+* Linux:
+  [MPICH](https://www.mpich.org/),
+  [Open MPI](https://www.open-mpi.org/), and
+  [Intel MPI](https://software.intel.com/intel-mpi-library) (`apt` install).
+
+* macOS:
+  [MPICH](https://www.mpich.org/) and
+  [Open MPI](https://www.open-mpi.org/) (`brew` install).
+
+* Windows:
+  [Microsoft MPI](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).

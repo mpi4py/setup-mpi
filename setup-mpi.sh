@@ -3,6 +3,31 @@ set -eu
 
 MPI=$(echo "${1:-}" | tr '[:upper:]' '[:lower:]')
 
+setup-apt-intel-oneapi () {
+    apt_repo_url=https://apt.repos.intel.com/
+    gpg_key_url=$apt_repo_url/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
+    keyring=/usr/share/keyrings/oneapi-archive-keyring.gpg
+    # download the key to system keyring
+    curl -s $gpg_key_url | gpg --dearmor | sudo tee $keyring > /dev/null
+    # add signed entry to apt sources
+    echo "deb [signed-by=${keyring}] ${apt_repo_url}/oneapi all main" | \
+    sudo tee /etc/apt/sources.list.d/oneAPI.list
+    # update list of available packages
+    sudo apt update
+}
+
+setup-env-intel-oneapi () {
+    set +u
+    source /opt/intel/oneapi/setvars.sh
+    set -u
+    echo "${I_MPI_ROOT}/bin" >> $GITHUB_PATH
+    echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> $GITHUB_ENV
+    echo "I_MPI_ROOT=${I_MPI_ROOT}" >> $GITHUB_ENV
+    echo "FI_PROVIDER_PATH=${FI_PROVIDER_PATH}" >> $GITHUB_ENV
+    echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" >> $GITHUB_ENV
+    echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> $GITHUB_ENV
+}
+
 case $(uname) in
 
     Linux)
@@ -15,6 +40,11 @@ case $(uname) in
                 ;;
             openmpi)
                 sudo apt install -y -q openmpi-bin libopenmpi-dev
+                ;;
+            intelmpi)
+                setup-apt-intel-oneapi
+                sudo apt install -y -q intel-oneapi-mpi-devel
+                setup-env-intel-oneapi
                 ;;
             *)
                 echo "Unknown MPI implementation:" $MPI
@@ -75,6 +105,11 @@ case $MPI in
     openmpi)
         echo "::group::Run ompi_info --all"
         ompi_info --all
+        echo "::endgroup::"
+        ;;
+    intelmpi)
+        echo "::group::Run impi_info -all"
+        impi_info -all
         echo "::endgroup::"
         ;;
 esac

@@ -19,6 +19,7 @@ jobs:
         mpi:
           - mpich
           - openmpi
+          - intelmpi
           - msmpi
         os:
           - ubuntu-22.04
@@ -33,17 +34,25 @@ jobs:
           - os: ubuntu-20.04
             mpi: msmpi
           - os: macos-12
+            mpi: intelmpi
+          - os: macos-12
             mpi: msmpi
+          - os: macos-11
+            mpi: intelmpi
           - os: macos-11
             mpi: msmpi
           - os: windows-2022
             mpi: mpich
           - os: windows-2022
             mpi: openmpi
+          - os: windows-2022
+            mpi: intelmpi
           - os: windows-2019
             mpi: mpich
           - os: windows-2019
             mpi: openmpi
+          - os: windows-2019
+            mpi: intelmpi
 
     steps:
 
@@ -68,6 +77,10 @@ jobs:
       if:   ${{ matrix.mpi == 'openmpi' }}
 
     - name: Show MPI info
+      run:  impi_info
+      if:   ${{ matrix.mpi == 'intelmpi' }}
+
+    - name: Show MPI info
       run: |
         Write-Host MSMPI_BIN=$Env:MSMPI_BIN
         Write-Host MSMPI_INC=$Env:MSMPI_INC
@@ -75,14 +88,23 @@ jobs:
         Write-Host MSMPI_LIB64=$Env:MSMPI_LIB64
       if:   ${{ matrix.mpi == 'msmpi' }}
 
-    - name: Show MPI compilers
+    - name: Show MPI C compiler wrapper
       run: |
         command -v mpicc
         mpicc -show
+      if: ${{ runner.os != 'Windows' }}
+
+    - name: Show MPI C++ compiler wrapper
+      run: |
         command -v mpicxx
         mpicxx -show
-        command -v mpifort
-        mpifort -show
+      if: ${{ runner.os != 'Windows' }}
+
+    - name: Show MPI Fortran compiler wrapper
+      run: |
+        mpifort=$(command -v mpifort || command -v mpifc)
+        command -v $mpifort
+        $mpifort -show
       if: ${{ runner.os != 'Windows' }}
 
     - name: Help MPI executor
