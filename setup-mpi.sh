@@ -28,6 +28,35 @@ setup-env-intel-oneapi () {
     echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> $GITHUB_ENV
 }
 
+setup-win-intel-oneapi-mpi () {
+    baseurl=https://registrationcenter-download.intel.com
+    subpath=akdlm/irc_nas/18932
+    version=2021.7.0 build=9549
+    package=w_mpi_oneapi_p_${version}.${build}_offline.exe
+    set -x
+    curl -sO $baseurl/$subpath/$package
+    ./$package -s -a --silent --eula accept
+    set +x
+}
+
+setup-win-intel-oneapi-mpi-env () {
+    ONEAPI_ROOT="C:\Program Files (x86)\Intel\oneAPI"
+    I_MPI_ROOT="${ONEAPI_ROOT}\mpi\latest"
+    echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> $GITHUB_ENV
+    echo "I_MPI_ROOT=${I_MPI_ROOT}" >> $GITHUB_ENV
+    echo "${I_MPI_ROOT}\bin" >> $GITHUB_PATH
+    echo "${I_MPI_ROOT}\bin\release" >> $GITHUB_PATH
+    echo "${I_MPI_ROOT}\libfabric\bin" >> $GITHUB_PATH
+    echo "${I_MPI_ROOT}\libfabric\bin\utils" >> $GITHUB_PATH
+
+    ONEAPI_ROOT="/c/Program Files (x86)/Intel/oneAPI"
+    I_MPI_ROOT="${ONEAPI_ROOT}/mpi/latest"
+    export PATH="${I_MPI_ROOT}/bin:$PATH"
+    export PATH="${I_MPI_ROOT}/bin/release:$PATH"
+    export PATH="${I_MPI_ROOT}/bin/libfabric/bin:$PATH"
+    impi_info=impi_info.exe
+}
+
 case $(uname) in
 
     Linux)
@@ -80,6 +109,11 @@ case $(uname) in
                 sdir=$(dirname "${BASH_SOURCE[0]}")
                 pwsh "${sdir}\\setup-${MPI}.ps1"
                 ;;
+            intelmpi)
+                setup-win-intel-oneapi-mpi
+                setup-win-intel-oneapi-mpi-env
+                hydra_service.exe -install
+                ;;
             *)
                 echo "Unknown MPI implementation:" $MPI
                 exit 1
@@ -109,7 +143,7 @@ case $MPI in
         ;;
     intelmpi)
         echo "::group::Run impi_info -all"
-        impi_info -all
+        ${impi_info:-impi_info} -all
         echo "::endgroup::"
         ;;
 esac

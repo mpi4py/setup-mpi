@@ -45,14 +45,10 @@ jobs:
             mpi: mpich
           - os: windows-2022
             mpi: openmpi
-          - os: windows-2022
-            mpi: intelmpi
           - os: windows-2019
             mpi: mpich
           - os: windows-2019
             mpi: openmpi
-          - os: windows-2019
-            mpi: intelmpi
 
     steps:
 
@@ -88,24 +84,25 @@ jobs:
         Write-Host MSMPI_LIB64=$Env:MSMPI_LIB64
       if:   ${{ matrix.mpi == 'msmpi' }}
 
-    - name: Show MPI C compiler wrapper
+    - name: Show MPI compiler wrappers
       run: |
         command -v mpicc
         mpicc -show
-      if: ${{ runner.os != 'Windows' }}
 
-    - name: Show MPI C++ compiler wrapper
-      run: |
         command -v mpicxx
         mpicxx -show
-      if: ${{ runner.os != 'Windows' }}
 
-    - name: Show MPI Fortran compiler wrapper
-      run: |
         mpifort=$(command -v mpifort || command -v mpifc)
         command -v $mpifort
         $mpifort -show
       if: ${{ runner.os != 'Windows' }}
+
+    - name: Show MPI compiler wrappers
+      run: |
+        mpicc -show
+        mpicxx -show
+        mpifc -show
+      if: ${{ runner.os == 'Windows' && matrix.mpi == 'intelmpi' }}
 
     - name: Help MPI executor
       run: |
@@ -115,6 +112,11 @@ jobs:
 
     - name: Help MPI executor
       run: |
+        mpiexec -help
+      if: ${{ runner.os == 'Windows' && matrix.mpi == 'intelmpi' }}
+
+    - name: Help MPI executor
+      run: |
         mpiexec /help2
         mpiexec /help3
-      if: ${{ runner.os == 'Windows' }}
+      if: ${{ runner.os == 'Windows' && matrix.mpi == 'msmpi' }}

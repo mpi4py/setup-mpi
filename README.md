@@ -49,4 +49,5 @@ jobs:
   [Open MPI](https://www.open-mpi.org/) (`brew` install).
 
 * Windows:
-  [Microsoft MPI](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi).
+  [Microsoft MPI](https://docs.microsoft.com/en-us/message-passing-interface/microsoft-mpi) and
+  [Intel MPI](https://software.intel.com/intel-mpi-library).
