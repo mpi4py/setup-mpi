@@ -8,9 +8,27 @@ $tempdir    = $Env:RUNNER_TEMP
 $msmpisdk   = Join-Path $tempdir msmpisdk.msi
 $msmpisetup = Join-Path $tempdir msmpisetup.exe
 
+function Download-File($url, $filename) {
+  foreach ($i in 1..5) {
+    try {
+      Write-Host "Downloading ${url}"
+      Invoke-WebRequest $url -OutFile $filename
+      return
+    }
+    catch {
+      $message = $_
+      Write-Warning "${message}"
+      Write-Host "Download failed, retrying ..."
+      Start-Sleep -Seconds $i
+    }
+  }
+  throw "Failed to download from ${url}"
+  return $null
+}
+
 Write-Host "Downloading Microsoft MPI $version"
-Invoke-WebRequest "$baseurl/msmpisdk.msi"   -OutFile $msmpisdk
-Invoke-WebRequest "$baseurl/msmpisetup.exe" -OutFile $msmpisetup
+Download-File "$baseurl/msmpisdk.msi"   $msmpisdk
+Download-File "$baseurl/msmpisetup.exe" $msmpisetup
 
 Write-Host "Installing Microsoft MPI $version"
 Start-Process msiexec.exe -ArgumentList "/quiet /passive /qn /i $msmpisdk" -Wait
