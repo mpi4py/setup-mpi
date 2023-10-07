@@ -95,10 +95,14 @@ case $(uname) in
         echo "::group::Installing $MPI with brew"
         case $MPI in
             mpich)
+                brew unlink  openmpi > /dev/null 2>&1 || true
                 brew install mpich
+                brew link    mpich
                 ;;
             openmpi)
+                brew unlink  mpich   > /dev/null 2>&1 || true
                 brew install openmpi
+                brew link    openmpi
                 ;;
             *)
                 echo "Unknown MPI implementation:" $MPI
