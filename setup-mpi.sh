@@ -177,6 +177,7 @@ esac
 if [ $MPI == openmpi ]; then
     openmpi_mca_params=$HOME/.openmpi/mca-params.conf
     mkdir -p $(dirname $openmpi_mca_params)
+    rm -f $openmpi_mca_params
     echo plm=isolated >> $openmpi_mca_params
     echo rmaps_base_oversubscribe=true >> $openmpi_mca_params
     echo btl_base_warn_component_unused=false >> $openmpi_mca_params
