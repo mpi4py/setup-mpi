@@ -120,3 +120,98 @@ jobs:
         mpiexec /help2
         mpiexec /help3
       if: ${{ runner.os == 'Windows' && matrix.mpi == 'msmpi' }}
+
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup MPICH
+      id:   setup1
+      uses: ./
+      with:
+        mpi: mpich
+    - run: test ${{ steps.setup1.outputs.mpi }} == mpich
+    - run: command -v mpichversion
+
+    - name: Setup Open MPI
+      id:   setup2
+      uses: ./
+      with:
+        mpi: openmpi
+    - run: test ${{ steps.setup2.outputs.mpi }} == openmpi
+    - run: command -v ompi_info
+
+    - name: Setup Intel MPI
+      id:   setup3
+      uses: ./
+      with:
+        mpi: intelmpi
+    - run: test ${{ steps.setup3.outputs.mpi }} == intelmpi
+    - run: command -v impi_info
+
+  macOS:
+    runs-on: macos-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup MPICH
+      id:   setup1
+      uses: ./
+      with:
+        mpi: mpich
+    - run: test ${{ steps.setup1.outputs.mpi }} == mpich
+    - run: command -v mpichversion
+
+    - name: Setup Open MPI
+      id:   setup2
+      uses: ./
+      with:
+        mpi: open-mpi
+    - run: test ${{ steps.setup2.outputs.mpi }} == openmpi
+    - run: command -v ompi_info
+
+    - name: Unlink Homebrew MPI formulae
+      run:  brew unlink mpich openmpi
+
+    - name: Setup MPICH
+      id:   setup3
+      uses: ./
+      with:
+        mpi: mpich
+    - run: test ${{ steps.setup3.outputs.mpi }} == mpich
+    - run: command -v mpichversion
+
+    - name: Setup Open MPI
+      id:   setup4
+      uses: ./
+      with:
+        mpi: ompi
+    - run: test ${{ steps.setup4.outputs.mpi }} == openmpi
+    - run: command -v ompi_info
+
+  Windows:
+    runs-on: windows-latest
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Intel MPI
+      id:   setup1
+      uses: ./
+      with:
+        mpi: intel
+
+    - name: Setup Microsoft MPI
+      id:   setup2
+      uses: ./
+      with:
+        mpi: microsoft
+
+    - run: test ${{ steps.setup1.outputs.mpi }} == intelmpi
+    - run: test ${{ steps.setup2.outputs.mpi }} == msmpi
