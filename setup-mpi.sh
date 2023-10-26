@@ -179,6 +179,7 @@ if [ $MPI == openmpi ]; then
     mkdir -p $(dirname $openmpi_mca_params)
     rm -f $openmpi_mca_params
     echo plm=isolated >> $openmpi_mca_params
+    echo btl=tcp,self >> $openmpi_mca_params
     echo rmaps_base_oversubscribe=true >> $openmpi_mca_params
     echo btl_base_warn_component_unused=false >> $openmpi_mca_params
     echo btl_vader_single_copy_mechanism=none >> $openmpi_mca_params
