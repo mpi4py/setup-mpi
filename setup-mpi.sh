@@ -180,6 +180,7 @@ if [ $MPI == openmpi ]; then
     rm -f $openmpi_mca_params
     echo plm=isolated >> $openmpi_mca_params
     echo btl=tcp,self >> $openmpi_mca_params
+    echo mpi_yield_when_idle=true >> $openmpi_mca_params
     echo rmaps_base_oversubscribe=true >> $openmpi_mca_params
     echo btl_base_warn_component_unused=false >> $openmpi_mca_params
     echo btl_vader_single_copy_mechanism=none >> $openmpi_mca_params
