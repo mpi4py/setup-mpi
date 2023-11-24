@@ -108,6 +108,7 @@ case $(uname) in
     Darwin)
         MPI="${MPI:-mpich}"
         echo "::group::Installing $MPI with brew"
+        export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
         case $MPI in
             mpich)
                 brew unlink  openmpi > /dev/null 2>&1 || true
