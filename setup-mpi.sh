@@ -178,7 +178,6 @@ if [ $MPI == openmpi ]; then
     openmpi_mca_params=$HOME/.openmpi/mca-params.conf
     mkdir -p $(dirname $openmpi_mca_params)
     rm -f $openmpi_mca_params
-    echo plm=isolated >> $openmpi_mca_params
     echo btl=tcp,self >> $openmpi_mca_params
     echo mpi_yield_when_idle=true >> $openmpi_mca_params
     echo rmaps_base_oversubscribe=true >> $openmpi_mca_params
@@ -192,5 +191,12 @@ if [ $MPI == openmpi ]; then
     fi
     echo "::group::Configure ${openmpi_mca_params}"
     cat $openmpi_mca_params
+    echo "::endgroup::"
+    prte_mca_params=$HOME/.prte/mca-params.conf
+    mkdir -p $(dirname $prte_mca_params)
+    rm -f $prte_mca_params
+    echo rmaps_default_mapping_policy = :oversubscribe >> $prte_mca_params
+    echo "::group::Configure ${prte_mca_params}"
+    cat $prte_mca_params
     echo "::endgroup::"
 fi
