@@ -45,8 +45,8 @@ setup-env-intel-oneapi () {
 
 setup-win-intel-oneapi-mpi () {
     baseurl=https://registrationcenter-download.intel.com
-    subpath=akdlm/IRC_NAS/4f7f4251-7781-446f-89ac-c777dacb766f
-    version=2021.10.0 build=49373
+    subpath=akdlm/IRC_NAS/b7596581-64db-4820-bcfe-74ad9f5ec657
+    version=2021.11.0 build=49512
     package=w_mpi_oneapi_p_${version}.${build}_offline.exe
     set -x
     curl -sO $baseurl/$subpath/$package
@@ -67,15 +67,15 @@ setup-win-intel-oneapi-mpi-env () {
 
     echo "${I_MPI_ROOT}\\bin" >> $GITHUB_PATH
     echo "${I_MPI_ROOT}\\bin\\$library_kind" >> $GITHUB_PATH
-    echo "${I_MPI_ROOT}\\libfabric\\bin" >> $GITHUB_PATH
-    echo "${I_MPI_ROOT}\\libfabric\\bin\\utils" >> $GITHUB_PATH
+    echo "${I_MPI_ROOT}\\opt\\mpi\\libfabric\\bin" >> $GITHUB_PATH
+    echo "${I_MPI_ROOT}\\opt\\mpi\\libfabric\\bin\\utils" >> $GITHUB_PATH
 
     ONEAPI_ROOT="/c/Program Files (x86)/Intel/oneAPI"
     I_MPI_ROOT="${ONEAPI_ROOT}/mpi/latest"
     export PATH="${I_MPI_ROOT}/bin:$PATH"
     export PATH="${I_MPI_ROOT}/bin/$library_kind:$PATH"
-    export PATH="${I_MPI_ROOT}/libfabric/bin:$PATH"
-    export PATH="${I_MPI_ROOT}/libfabric/bin/utils:$PATH"
+    export PATH="${I_MPI_ROOT}/opt/mpi/libfabric/bin:$PATH"
+    export PATH="${I_MPI_ROOT}/opt/mpi/libfabric/bin/utils:$PATH"
     impi_info=impi_info.exe
 }
 
