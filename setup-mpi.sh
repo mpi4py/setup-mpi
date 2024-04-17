@@ -45,8 +45,8 @@ setup-env-intel-oneapi () {
 
 setup-win-intel-oneapi-mpi () {
     baseurl=https://registrationcenter-download.intel.com
-    subpath=akdlm/IRC_NAS/b7596581-64db-4820-bcfe-74ad9f5ec657
-    version=2021.11.0 build=49512
+    subpath=akdlm/IRC_NAS/fab706bb-ca1e-4cc9-b76a-a12df3cc984e
+    version=2021.12.0 build=539
     package=w_mpi_oneapi_p_${version}.${build}_offline.exe
     set -x
     curl -sO $baseurl/$subpath/$package
