@@ -18,7 +18,15 @@ case $MPI in
         ;;
 esac
 
+sudo () {
+    [ $(id -u) -eq 0 ] || set -- command sudo "$@"
+    "$@"
+}
+
 setup-apt-intel-oneapi () {
+    # ensure the required packages are installed
+    sudo apt update
+    sudo apt install -y -q ca-certificates curl gnupg procps
     apt_repo_url=https://apt.repos.intel.com/
     gpg_key_url=$apt_repo_url/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS.PUB
     keyring=/usr/share/keyrings/oneapi-archive-keyring.gpg

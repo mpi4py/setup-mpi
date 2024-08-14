@@ -157,6 +157,44 @@ jobs:
     - run: test ${{ steps.setup3.outputs.mpi }} == intelmpi
     - run: command -v impi_info
 
+  container:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - debian
+          - ubuntu
+    container: ${{ matrix.image }}
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup MPICH
+      id:   setup1
+      uses: ./
+      with:
+        mpi: mpich
+    - run: test ${{ steps.setup1.outputs.mpi }} = mpich
+    - run: command -v mpichversion
+
+    - name: Setup Open MPI
+      id:   setup2
+      uses: ./
+      with:
+        mpi: openmpi
+    - run: test ${{ steps.setup2.outputs.mpi }} = openmpi
+    - run: command -v ompi_info
+
+    - name: Setup Intel MPI
+      id:   setup3
+      uses: ./
+      with:
+        mpi: intelmpi
+    - run: test ${{ steps.setup3.outputs.mpi }} = intelmpi
+    - run: command -v impi_info
+
   macOS:
     runs-on: macos-latest
     steps:
