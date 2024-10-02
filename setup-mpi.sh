@@ -55,6 +55,7 @@ setup-win-intel-oneapi-mpi () {
     hash=fab706bb-ca1e-4cc9-b76a-a12df3cc984e version=2021.12.0 build=539
     hash=a3a49de8-dc40-4387-9784-5227fccb6caa version=2021.12.1 build=7
     hash=e20e3226-9264-41a0-bc18-6026d297e10d version=2021.13.0 build=717
+    hash=ea625b1d-8a8a-4bd5-b31d-7ed55af45994 version=2021.13.1 build=768
     baseurl=https://registrationcenter-download.intel.com
     subpath=akdlm/IRC_NAS/$hash
     package=w_mpi_oneapi_p_${version}.${build}_offline.exe
