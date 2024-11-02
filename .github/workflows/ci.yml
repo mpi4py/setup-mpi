@@ -106,7 +106,6 @@ jobs:
       run: |
         mpicc -show
         mpicxx -show
-        mpifc -show
       if: ${{ runner.os == 'Windows' && matrix.mpi == 'intelmpi' }}
 
     - name: Help MPI executor
