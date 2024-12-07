@@ -22,17 +22,17 @@ jobs:
           - intelmpi
           - msmpi
         os:
+          - ubuntu-24.04
           - ubuntu-22.04
-          - ubuntu-20.04
           - macos-14
           - macos-13
           - macos-12
           - windows-2022
           - windows-2019
         exclude:
-          - os: ubuntu-22.04
+          - os: ubuntu-24.04
             mpi: msmpi
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             mpi: msmpi
           - os: macos-14
             mpi: intelmpi
