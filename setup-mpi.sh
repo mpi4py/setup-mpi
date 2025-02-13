@@ -125,17 +125,15 @@ case $(uname) in
     Darwin)
         MPI="${MPI:-mpich}"
         echo "::group::Installing $MPI with brew"
-        export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
+        brew unlink mpich   > /dev/null 2>&1 || true
+        brew unlink openmpi > /dev/null 2>&1 || true
         case $MPI in
-            mpich)
-                brew unlink  openmpi > /dev/null 2>&1 || true
-                brew install mpich
-                brew link    mpich
-                ;;
-            openmpi)
-                brew unlink  mpich   > /dev/null 2>&1 || true
-                brew install openmpi
-                brew link    openmpi
+            mpich|openmpi)
+                if brew list $MPI > /dev/null 2>&1; then
+                    brew link $MPI
+                else
+                    brew install $MPI
+                fi
                 ;;
             *)
                 echo "Unknown MPI implementation:" $MPI
