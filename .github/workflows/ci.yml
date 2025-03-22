@@ -24,8 +24,12 @@ jobs:
         os:
           - ubuntu-24.04
           - ubuntu-22.04
+          - ubuntu-24.04-arm
+          - ubuntu-22.04-arm
+          - macos-15
           - macos-14
           - macos-13
+          - windows-2025
           - windows-2022
           - windows-2019
         exclude:
@@ -33,6 +37,18 @@ jobs:
             mpi: msmpi
           - os: ubuntu-22.04
             mpi: msmpi
+          - os: ubuntu-24.04-arm
+            mpi: intelmpi
+          - os: ubuntu-22.04-arm
+            mpi: intelmpi
+          - os: ubuntu-24.04-arm
+            mpi: msmpi
+          - os: ubuntu-22.04-arm
+            mpi: msmpi
+          - os: macos-15
+            mpi: intelmpi
+          - os: macos-15
+            mpi: msmpi
           - os: macos-14
             mpi: intelmpi
           - os: macos-14
@@ -41,6 +57,10 @@ jobs:
             mpi: intelmpi
           - os: macos-13
             mpi: msmpi
+          - os: windows-2025
+            mpi: mpich
+          - os: windows-2025
+            mpi: openmpi
           - os: windows-2022
             mpi: mpich
           - os: windows-2022
@@ -119,6 +139,14 @@ jobs:
         mpiexec /help2
         mpiexec /help3
       if: ${{ runner.os == 'Windows' && matrix.mpi == 'msmpi' }}
+
+    - name: Build MPI application
+      run:  mpicc helloworld.c -o helloworld.exe
+      if: ${{ runner.os != 'Windows' }}
+
+    - name: Execute MPI application
+      run:  mpiexec -n 5 ./helloworld.exe
+      if: ${{ runner.os != 'Windows' }}
 
   Linux:
     runs-on: ubuntu-latest

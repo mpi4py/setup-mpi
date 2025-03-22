@@ -23,6 +23,30 @@ sudo () {
     "$@"
 }
 
+hotfix-apt-ubuntu-noble-mpich() {
+    grep -q 'ID=ubuntu' /etc/os-release || return 0
+    grep -q 'VERSION_CODENAME=noble' /etc/os-release || return 0
+    command -v curl > /dev/null || apt install -y -q curl
+    echo "Hotfix broken MPICH package in Ubuntu 24.04 LTS"
+    echo "https://bugs.launchpad.net/ubuntu/+source/mpich/+bug/2072338"
+    case "$(arch)" in
+        aarch64) arch=arm64 repo=https://ports.ubuntu.com/ubuntu-ports;;
+        x86_64)  arch=amd64 repo=https://archive.ubuntu.com/ubuntu;;
+    esac
+    libucx0=libucx0_1.17.0+ds-3build1_$arch.deb
+    libmpich12=libmpich12_4.2.0-14_$arch.deb
+    curl -sSO $repo/pool/universe/u/ucx/$libucx0
+    curl -sSO $repo/pool/universe/m/mpich/$libmpich12
+    tmpdir=$(mktemp -d)
+    dpkg-deb -x $libucx0 $tmpdir
+    dpkg-deb -x $libmpich12 $tmpdir
+    libdir=/usr/lib/$(arch)-linux-gnu
+    sudo cp -r $tmpdir$libdir/ucx $libdir
+    sudo cp $tmpdir$libdir/libuc[mpst]*.so.0.*.* $libdir
+    sudo cp $tmpdir$libdir/libmpich*.so.12.*.* $libdir
+    rm -rf $tmpdir $libucx0 $libmpich12
+}
+
 setup-apt-intel-oneapi () {
     # ensure the required packages are installed
     sudo apt update
@@ -106,6 +130,7 @@ case $(uname) in
         case $MPI in
             mpich)
                 sudo apt install -y -q mpich libmpich-dev
+                hotfix-apt-ubuntu-noble-mpich
                 ;;
             openmpi)
                 sudo apt install -y -q openmpi-bin libopenmpi-dev
