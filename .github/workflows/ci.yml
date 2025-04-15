@@ -159,6 +159,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    - uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -197,6 +201,10 @@ jobs:
     container: ${{ matrix.image }}
     steps:
 
+    - uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
+
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -227,6 +235,10 @@ jobs:
   macOS:
     runs-on: macos-latest
     steps:
+
+    - uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -269,6 +281,10 @@ jobs:
   Windows:
     runs-on: windows-latest
     steps:
+
+    - uses: step-security/harden-runner@v2
+      with:
+        egress-policy: audit
 
     - name: Checkout
       uses: actions/checkout@v4
