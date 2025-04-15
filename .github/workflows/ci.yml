@@ -303,3 +303,16 @@ jobs:
 
     - run: test ${{ steps.setup1.outputs.mpi }} == intelmpi
     - run: test ${{ steps.setup2.outputs.mpi }} == msmpi
+
+  ci-status:
+    runs-on: ubuntu-latest
+    if: ${{ success() || failure() }}
+    needs:
+      -test
+      -Linux
+      -container
+      -macOS:
+      -Windows
+    steps:
+    - uses: step-security/harden-runner@v2
+    - run: ${{ !(contains(needs.*.result, 'failure')) }}
