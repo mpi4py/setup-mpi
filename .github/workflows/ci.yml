@@ -311,7 +311,7 @@ jobs:
       -test
       -Linux
       -container
-      -macOS:
+      -macOS
       -Windows
     steps:
     - uses: step-security/harden-runner@v2
