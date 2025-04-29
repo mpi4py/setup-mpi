@@ -76,6 +76,12 @@ setup-env-intel-oneapi () {
 }
 
 setup-win-intel-oneapi-mpi () {
+    hash=18932                                version=2021.7.0  build=9549
+    hash=19011                                version=2021.7.1  build=15761
+    hash=19160                                version=2021.8.0  build=25543
+    hash=c11b9bf0-2527-4925-950d-186dba31fb40 version=2021.9.0  build=43421
+    hash=4f7f4251-7781-446f-89ac-c777dacb766f version=2021.10.0 build=49373
+    hash=b7596581-64db-4820-bcfe-74ad9f5ec657 version=2021.11.0 build=49512
     hash=fab706bb-ca1e-4cc9-b76a-a12df3cc984e version=2021.12.0 build=539
     hash=a3a49de8-dc40-4387-9784-5227fccb6caa version=2021.12.1 build=7
     hash=e20e3226-9264-41a0-bc18-6026d297e10d version=2021.13.0 build=717
