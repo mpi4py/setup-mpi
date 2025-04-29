@@ -107,20 +107,17 @@ setup-win-intel-oneapi-mpi-env () {
     ONEAPI_ROOT="C:\Program Files (x86)\Intel\oneAPI"
     I_MPI_ROOT="${ONEAPI_ROOT}\mpi\latest"
     I_MPI_OFI_LIBRARY_INTERNAL="1"
+    mpibindir="${I_MPI_ROOT}\bin"
+    ofibindir="${I_MPI_ROOT}\opt\mpi\libfabric\bin"
 
     echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> $GITHUB_ENV
     echo "I_MPI_ROOT=${I_MPI_ROOT}" >> $GITHUB_ENV
     echo "I_MPI_OFI_LIBRARY_INTERNAL=${I_MPI_OFI_LIBRARY_INTERNAL}" >> $GITHUB_ENV
+    echo "${mpibindir}" >> $GITHUB_PATH
+    echo "${ofibindir}" >> $GITHUB_PATH
 
-    echo "${I_MPI_ROOT}\\bin" >> $GITHUB_PATH
-    echo "${I_MPI_ROOT}\\opt\\mpi\\libfabric\\bin" >> $GITHUB_PATH
-    echo "${I_MPI_ROOT}\\opt\\mpi\\libfabric\\bin\\utils" >> $GITHUB_PATH
-
-    ONEAPI_ROOT="/c/Program Files (x86)/Intel/oneAPI"
-    I_MPI_ROOT="${ONEAPI_ROOT}/mpi/latest"
-    export PATH="${I_MPI_ROOT}/bin:$PATH"
-    export PATH="${I_MPI_ROOT}/opt/mpi/libfabric/bin:$PATH"
-    export PATH="${I_MPI_ROOT}/opt/mpi/libfabric/bin/utils:$PATH"
+    export PATH="$(cygpath -u "${mpibindir}"):$PATH"
+    export PATH="$(cygpath -u "${ofibindir}"):$PATH"
     impi_info=impi_info.exe
 }
 
