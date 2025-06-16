@@ -34,7 +34,6 @@ jobs:
           - macos-13
           - windows-2025
           - windows-2022
-          - windows-2019
         exclude:
           - os: ubuntu-24.04
             mpi: msmpi
@@ -67,10 +66,6 @@ jobs:
           - os: windows-2022
             mpi: mpich
           - os: windows-2022
-            mpi: openmpi
-          - os: windows-2019
-            mpi: mpich
-          - os: windows-2019
             mpi: openmpi
 
     steps:
