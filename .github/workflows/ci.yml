@@ -191,7 +191,7 @@ jobs:
       fail-fast: false
       matrix:
         image:
-          - debian
+          - debian:12
           - ubuntu
     container: ${{ matrix.image }}
     steps:
