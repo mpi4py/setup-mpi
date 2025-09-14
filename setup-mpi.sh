@@ -33,17 +33,20 @@ hotfix-apt-ubuntu-noble-mpich() {
         aarch64) arch=arm64 repo=https://ports.ubuntu.com/ubuntu-ports;;
         x86_64)  arch=amd64 repo=https://archive.ubuntu.com/ubuntu;;
     esac
-    libucx0=libucx0_1.17.0+ds-3build1_$arch.deb
-    libmpich12=libmpich12_4.2.0-14_$arch.deb
+    libucx0=libucx0_1.18.1+ds-2_$arch.deb
+    libmpich12=libmpich12_4.2.1-5_$arch.deb
     curl -sSO $repo/pool/universe/u/ucx/$libucx0
     curl -sSO $repo/pool/universe/m/mpich/$libmpich12
     tmpdir=$(mktemp -d)
     dpkg-deb -x $libucx0 $tmpdir
     dpkg-deb -x $libmpich12 $tmpdir
     libdir=/usr/lib/$(arch)-linux-gnu
-    sudo cp -r $tmpdir$libdir/ucx $libdir
-    sudo cp $tmpdir$libdir/libuc[mpst]*.so.0.*.* $libdir
-    sudo cp $tmpdir$libdir/libmpich*.so.12.*.* $libdir
+    sudo cp -a $tmpdir$libdir/ucx $libdir
+    sudo cp -a $tmpdir$libdir/libuc[mpst]*.so.0.*.* $libdir
+    sudo cp -a $tmpdir$libdir/libuc[mpst]*.so.0 $libdir
+    sudo cp -a $tmpdir$libdir/libmpi*.so.12.*.* $libdir
+    sudo cp -a $tmpdir$libdir/libmpi*.so.12 $libdir
+    sudo ldconfig
     rm -rf $tmpdir $libucx0 $libmpich12
 }
 
