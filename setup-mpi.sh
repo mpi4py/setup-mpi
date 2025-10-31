@@ -95,6 +95,7 @@ setup-win-intel-oneapi-mpi () {
     hash=edf463a6-a6ad-43d2-a588-daa2e30f8735 version=2021.15.0 build=496
     hash=c7b82926-172a-4943-8612-fcbc4625b17a version=2021.16.0 build=441
     hash=ab55e200-0293-4537-af1f-a96b309bec1a version=2021.16.1 build=805
+    hash=44ab2be4-30c9-476d-8f79-943410ef6fa0 version=2021.17.0 build=375
     baseurl=https://registrationcenter-download.intel.com
     subpath=akdlm/IRC_NAS/$hash
     if test $version \< 2021.14.0; then
