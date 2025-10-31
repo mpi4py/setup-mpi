@@ -31,7 +31,7 @@ jobs:
           - ubuntu-22.04-arm
           - macos-15
           - macos-14
-          - macos-13
+          - macos-15-intel
           - windows-2025
           - windows-2022
         exclude:
@@ -55,9 +55,9 @@ jobs:
             mpi: intelmpi
           - os: macos-14
             mpi: msmpi
-          - os: macos-13
+          - os: macos-15-intel
             mpi: intelmpi
-          - os: macos-13
+          - os: macos-15-intel
             mpi: msmpi
           - os: windows-2025
             mpi: mpich
