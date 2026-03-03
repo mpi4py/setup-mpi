@@ -55,6 +55,7 @@ jobs:
           - ubuntu-22.04
           - ubuntu-24.04-arm
           - ubuntu-22.04-arm
+          - macos-26
           - macos-15
           - macos-14
           - macos-15-intel
@@ -72,6 +73,10 @@ jobs:
           - os: ubuntu-24.04-arm
             mpi: msmpi
           - os: ubuntu-22.04-arm
+            mpi: msmpi
+          - os: macos-26
+            mpi: intelmpi
+          - os: macos-26
             mpi: msmpi
           - os: macos-15
             mpi: intelmpi
