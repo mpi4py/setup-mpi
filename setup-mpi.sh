@@ -1,9 +1,10 @@
 #!/bin/bash
+# shellcheck disable=SC1091,SC2129
 set -eu
 
 MPI=$(echo "${1:-}" | tr '[:upper:]' '[:lower:]' | tr -d '-')
 
-case $MPI in
+case "$MPI" in
     mpich)
         MPI=mpich
         ;;
@@ -19,7 +20,7 @@ case $MPI in
 esac
 
 sudo () {
-    [ $(id -u) -eq 0 ] || set -- command sudo "$@"
+    [ "$(id -u)" -eq 0 ] || set -- command sudo "$@"
     "$@"
 }
 
@@ -35,19 +36,19 @@ hotfix-apt-ubuntu-noble-mpich() {
     esac
     libucx0=libucx0_1.18.1+ds-2_$arch.deb
     libmpich12=libmpich12_4.2.1-5_$arch.deb
-    curl -sSO $repo/pool/universe/u/ucx/$libucx0
-    curl -sSO $repo/pool/universe/m/mpich/$libmpich12
+    curl -sSO "$repo/pool/universe/u/ucx/$libucx0"
+    curl -sSO "$repo/pool/universe/m/mpich/$libmpich12"
     tmpdir=$(mktemp -d)
-    dpkg-deb -x $libucx0 $tmpdir
-    dpkg-deb -x $libmpich12 $tmpdir
+    dpkg-deb -x "$libucx0" "$tmpdir"
+    dpkg-deb -x "$libmpich12" "$tmpdir"
     libdir=/usr/lib/$(arch)-linux-gnu
-    sudo cp -a $tmpdir$libdir/ucx $libdir
-    sudo cp -a $tmpdir$libdir/libuc[mpst]*.so.0.*.* $libdir
-    sudo cp -a $tmpdir$libdir/libuc[mpst]*.so.0 $libdir
-    sudo cp -a $tmpdir$libdir/libmpi*.so.12.*.* $libdir
-    sudo cp -a $tmpdir$libdir/libmpi*.so.12 $libdir
+    sudo cp -a "$tmpdir$libdir"/ucx "$libdir"
+    sudo cp -a "$tmpdir$libdir"/libuc[mpst]*.so.0.*.* "$libdir"
+    sudo cp -a "$tmpdir$libdir"/libuc[mpst]*.so.0 "$libdir"
+    sudo cp -a "$tmpdir$libdir"/libmpi*.so.12.*.* "$libdir"
+    sudo cp -a "$tmpdir$libdir"/libmpi*.so.12 "$libdir"
     sudo ldconfig
-    rm -rf $tmpdir $libucx0 $libmpich12
+    rm -rf "$tmpdir" "$libucx0" "$libmpich12"
 }
 
 setup-apt-intel-oneapi () {
@@ -70,12 +71,12 @@ setup-env-intel-oneapi () {
     set +u
     source /opt/intel/oneapi/setvars.sh
     set -u
-    echo "${I_MPI_ROOT}/bin" >> $GITHUB_PATH
-    echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> $GITHUB_ENV
-    echo "I_MPI_ROOT=${I_MPI_ROOT}" >> $GITHUB_ENV
-    echo "FI_PROVIDER_PATH=${FI_PROVIDER_PATH}" >> $GITHUB_ENV
-    echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" >> $GITHUB_ENV
-    echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> $GITHUB_ENV
+    echo "${I_MPI_ROOT}/bin" >> "$GITHUB_PATH"
+    echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> "$GITHUB_ENV"
+    echo "I_MPI_ROOT=${I_MPI_ROOT}" >> "$GITHUB_ENV"
+    echo "FI_PROVIDER_PATH=${FI_PROVIDER_PATH}" >> "$GITHUB_ENV"
+    echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+    echo "PKG_CONFIG_PATH=${PKG_CONFIG_PATH}" >> "$GITHUB_ENV"
 }
 
 setup-win-intel-oneapi-mpi () {
@@ -118,24 +119,25 @@ setup-win-intel-oneapi-mpi-env () {
     mpibindir="${I_MPI_ROOT}\bin"
     ofibindir="${I_MPI_ROOT}\opt\mpi\libfabric\bin"
 
-    echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> $GITHUB_ENV
-    echo "I_MPI_ROOT=${I_MPI_ROOT}" >> $GITHUB_ENV
-    echo "I_MPI_OFI_LIBRARY_INTERNAL=${I_MPI_OFI_LIBRARY_INTERNAL}" >> $GITHUB_ENV
-    echo "${mpibindir}" >> $GITHUB_PATH
-    echo "${ofibindir}" >> $GITHUB_PATH
+    echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> "$GITHUB_ENV"
+    echo "I_MPI_ROOT=${I_MPI_ROOT}" >> "$GITHUB_ENV"
+    echo "I_MPI_OFI_LIBRARY_INTERNAL=${I_MPI_OFI_LIBRARY_INTERNAL}" >> "$GITHUB_ENV"
+    echo "${mpibindir}" >> "$GITHUB_PATH"
+    echo "${ofibindir}" >> "$GITHUB_PATH"
 
-    export PATH="$(cygpath -u "${mpibindir}"):$PATH"
-    export PATH="$(cygpath -u "${ofibindir}"):$PATH"
+    PATH="$(cygpath -u "${mpibindir}"):$PATH"
+    PATH="$(cygpath -u "${ofibindir}"):$PATH"
+    export PATH
     impi_info=impi_info.exe
 }
 
-case $(uname) in
+case "$(uname)" in
 
     Linux)
         MPI="${MPI:-mpich}"
         echo "::group::Installing $MPI with apt"
         sudo apt update
-        case $MPI in
+        case "$MPI" in
             mpich)
                 sudo apt install -y -q mpich libmpich-dev
                 hotfix-apt-ubuntu-noble-mpich
@@ -149,7 +151,7 @@ case $(uname) in
                 setup-env-intel-oneapi
                 ;;
             *)
-                echo "Unknown MPI implementation:" $MPI
+                echo "Unknown MPI implementation:" "$MPI"
                 exit 1
                 ;;
         esac
@@ -161,16 +163,16 @@ case $(uname) in
         echo "::group::Installing $MPI with brew"
         brew unlink mpich   > /dev/null 2>&1 || true
         brew unlink openmpi > /dev/null 2>&1 || true
-        case $MPI in
+        case "$MPI" in
             mpich|openmpi)
-                if brew list $MPI > /dev/null 2>&1; then
-                    brew link $MPI
+                if brew list "$MPI" > /dev/null 2>&1; then
+                    brew link "$MPI"
                 else
-                    brew install $MPI
+                    brew install "$MPI"
                 fi
                 ;;
             *)
-                echo "Unknown MPI implementation:" $MPI
+                echo "Unknown MPI implementation:" "$MPI"
                 exit 1
                 ;;
         esac
@@ -180,7 +182,7 @@ case $(uname) in
     Windows* | MINGW* | MSYS*)
         MPI="${MPI:-msmpi}"
         echo "::group::Installing $MPI"
-        case $MPI in
+        case "$MPI" in
             msmpi)
                 sdir=$(dirname "${BASH_SOURCE[0]}")
                 pwsh "${sdir}\\setup-${MPI}.ps1"
@@ -191,7 +193,7 @@ case $(uname) in
                 hydra_service.exe -install
                 ;;
             *)
-                echo "Unknown MPI implementation:" $MPI
+                echo "Unknown MPI implementation:" "$MPI"
                 exit 1
                 ;;
         esac
@@ -199,14 +201,14 @@ case $(uname) in
         ;;
 
     *)
-        echo "Unknown OS kernel:" $(uname)
+        echo "Unknown OS kernel:" "$(uname)"
         exit 1
         ;;
 esac
 
-echo "mpi=${MPI}" >> $GITHUB_OUTPUT
+echo "mpi=${MPI}" >> "$GITHUB_OUTPUT"
 
-case $MPI in
+case "$MPI" in
     mpich)
         echo "::group::Run mpichversion"
         mpichversion
@@ -224,29 +226,29 @@ case $MPI in
         ;;
 esac
 
-if [ $MPI == openmpi ]; then
+if [ "$MPI" = openmpi ]; then
     openmpi_mca_params=$HOME/.openmpi/mca-params.conf
-    mkdir -p $(dirname $openmpi_mca_params)
-    rm -f $openmpi_mca_params
-    echo btl=tcp,self >> $openmpi_mca_params
-    echo mpi_yield_when_idle=true >> $openmpi_mca_params
-    echo rmaps_base_oversubscribe=true >> $openmpi_mca_params
-    echo btl_base_warn_component_unused=false >> $openmpi_mca_params
-    echo btl_vader_single_copy_mechanism=none >> $openmpi_mca_params
-    if [[ $(uname) == Darwin ]]; then
+    mkdir -p "$(dirname "$openmpi_mca_params")"
+    rm -f "$openmpi_mca_params"
+    echo btl=tcp,self >> "$openmpi_mca_params"
+    echo mpi_yield_when_idle=true >> "$openmpi_mca_params"
+    echo rmaps_base_oversubscribe=true >> "$openmpi_mca_params"
+    echo btl_base_warn_component_unused=false >> "$openmpi_mca_params"
+    echo btl_vader_single_copy_mechanism=none >> "$openmpi_mca_params"
+    if [ "$(uname)" = Darwin ]; then
         # open-mpi/ompi#7516
-        echo gds=hash >> $openmpi_mca_params
+        echo gds=hash >> "$openmpi_mca_params"
         # open-mpi/ompi#5798
-        echo btl_vader_backing_directory=/tmp >> $openmpi_mca_params
+        echo btl_vader_backing_directory=/tmp >> "$openmpi_mca_params"
     fi
     echo "::group::Configure ${openmpi_mca_params}"
-    cat $openmpi_mca_params
+    cat "$openmpi_mca_params"
     echo "::endgroup::"
     prte_mca_params=$HOME/.prte/mca-params.conf
-    mkdir -p $(dirname $prte_mca_params)
-    rm -f $prte_mca_params
-    echo rmaps_default_mapping_policy = :oversubscribe >> $prte_mca_params
+    mkdir -p "$(dirname "$prte_mca_params")"
+    rm -f "$prte_mca_params"
+    echo rmaps_default_mapping_policy = :oversubscribe >> "$prte_mca_params"
     echo "::group::Configure ${prte_mca_params}"
-    cat $prte_mca_params
+    cat "$prte_mca_params"
     echo "::endgroup::"
 fi

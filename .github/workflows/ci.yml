@@ -1,6 +1,6 @@
 name: ci
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -13,6 +13,32 @@ permissions:
   contents: read
 
 jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v6
+
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: 3
+        pip-install: >-
+          codespell
+          shellcheck-py
+          yamllint
+
+    - name: codespell
+      run:  codespell
+
+    - name: yamllint
+      run:  yamllint .
+
+    - name: shellcheck
+      run:  shellcheck setup-mpi.sh
 
   test:
     runs-on: ${{ matrix.os }}
@@ -303,6 +329,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ success() || failure() }}
     needs:
+      - lint
       - test
       - Linux
       - container

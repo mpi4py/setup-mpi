@@ -1,0 +1,9 @@
+extends: default
+
+rules:
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: -1
+  document-start: disable
+  indentation:
+    indent-sequences: whatever
