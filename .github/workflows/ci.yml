@@ -52,25 +52,34 @@ jobs:
           - intelmpi
           - msmpi
         os:
+          - ubuntu-26.04
           - ubuntu-24.04
           - ubuntu-22.04
+          - ubuntu-26.04-arm
           - ubuntu-24.04-arm
           - ubuntu-22.04-arm
           - macos-26
           - macos-15
           - macos-14
+          - macos-26-intel
           - macos-15-intel
           - windows-2025
           - windows-2022
         exclude:
+          - os: ubuntu-26.04
+            mpi: msmpi
           - os: ubuntu-24.04
             mpi: msmpi
           - os: ubuntu-22.04
             mpi: msmpi
+          - os: ubuntu-26.04-arm
+            mpi: intelmpi
           - os: ubuntu-24.04-arm
             mpi: intelmpi
           - os: ubuntu-22.04-arm
             mpi: intelmpi
+          - os: ubuntu-26.04-arm
+            mpi: msmpi
           - os: ubuntu-24.04-arm
             mpi: msmpi
           - os: ubuntu-22.04-arm
@@ -86,6 +95,10 @@ jobs:
           - os: macos-14
             mpi: intelmpi
           - os: macos-14
+            mpi: msmpi
+          - os: macos-26-intel
+            mpi: intelmpi
+          - os: macos-26-intel
             mpi: msmpi
           - os: macos-15-intel
             mpi: intelmpi
