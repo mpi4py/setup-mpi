@@ -118,13 +118,12 @@ setup-win-intel-oneapi-mpi () {
 setup-win-intel-oneapi-mpi-env () {
     ONEAPI_ROOT="C:\Program Files (x86)\Intel\oneAPI"
     I_MPI_ROOT="${ONEAPI_ROOT}\mpi\latest"
-    I_MPI_OFI_LIBRARY_INTERNAL="1"
     mpibindir="${I_MPI_ROOT}\bin"
-    ofibindir="${I_MPI_ROOT}\opt\mpi\libfabric\bin"
+    libfabric="$(find "$ONEAPI_ROOT" -name libfabric.dll)"
+    ofibindir="$(cygpath -w "$(dirname "$libfabric")")"
 
     echo "ONEAPI_ROOT=${ONEAPI_ROOT}" >> "$GITHUB_ENV"
     echo "I_MPI_ROOT=${I_MPI_ROOT}" >> "$GITHUB_ENV"
-    echo "I_MPI_OFI_LIBRARY_INTERNAL=${I_MPI_OFI_LIBRARY_INTERNAL}" >> "$GITHUB_ENV"
     echo "${mpibindir}" >> "$GITHUB_PATH"
     echo "${ofibindir}" >> "$GITHUB_PATH"
 
