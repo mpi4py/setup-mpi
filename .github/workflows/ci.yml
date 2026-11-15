@@ -194,6 +194,9 @@ jobs:
     - name: Execute MPI application
       run:  mpiexec -n 5 ./helloworld.exe
       if: ${{ runner.os != 'Windows' }}
+      env:
+        UCX_TLS: tcp,sm,self
+        FI_PROVIDER: tcp
 
   Linux:
     runs-on: ubuntu-latest
